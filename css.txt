@@ -1,0 +1,77 @@
+/* =========================================================================
+​1. CONFIGURACIÓN DE COLORES Y TIPOGRAFÍA (TAILWIND CSS)
+Para usar en tu HTML dentro de <script> junto al CDN de Tailwind
+========================================================================= /
+/
+tailwind.config = {
+theme: {
+extend: {
+colors: {
+olive: {
+50: '#f6f7f2',
+100: '#e8ebd9',
+600: '#556b2f',
+700: '#465827',
+800: '#384620',
+900: '#2b361a',
+},
+winered: {
+500: '#800020',
+600: '#6b001b',
+700: '#540015',
+},
+mustard: {
+400: '#e1ad01',
+500: '#d4af37',
+},
+charcoal: '#1a1a1a',
+},
+fontFamily: {
+serif: ['Playfair Display', 'Georgia', 'serif'],
+sans: ['Inter', 'sans-serif'],
+}
+}
+}
+}
+*/
+​/* =========================================================================
+2. ESTILOS CSS PERSONALIZADOS (PARA ETIQUETA <style> O ARCHIVO .css)
+========================================================================= */
+​/* Tipografía base y fondo crema suave */
+body {
+font-family: 'Inter', sans-serif;
+background-color: #fcfcf9;
+color: #1a1a1a;
+}
+​/* Clase para títulos elegantes con serifa */
+.serif {
+font-family: 'Playfair Display', Georgia, serif;
+}
+​/* Barra de desplazamiento (Scrollbar) personalizada en tono verde oliva */
+::-webkit-scrollbar {
+width: 8px;
+}
+​::-webkit-scrollbar-track {
+background: #f1f1f1;
+}
+​::-webkit-scrollbar-thumb {
+background: #556b2f;
+border-radius: 4px;
+}
+​::-webkit-scrollbar-thumb:hover {
+background: #465827;
+}
+​/* Efecto de difuminado y degradado oscuro/oliva para la cabecera principal */
+.hero-blur {
+backdrop-filter: blur(4px);
+-webkit-backdrop-filter: blur(4px);
+background: linear-gradient(180deg, rgba(26, 26, 26, 0.7) 0%, rgba(43, 54, 26, 0.85) 100%);
+}
+​/* Sombra sutil y elegante para tarjetas y contenedores */
+.card-shadow {
+box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+}
+​/* Transición suave para botones, pestañas y tarjetas interactivas */
+.transition-all-custom {
+transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}

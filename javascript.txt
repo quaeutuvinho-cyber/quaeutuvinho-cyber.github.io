@@ -1,0 +1,1197 @@
+javascript
+// =========================================================================
+// 1. BANCO DE PREGUNTAS MULTILINGÜE (PARA GENERACIÓN ALEATORIA DE 5 PREGUNTAS)
+// =========================================================================
+const questionPools = {
+    es: [
+        {
+            text: "¿Qué tipo de carnes o proteínas prefiere acompañar en sus comidas principales?",
+            options: [
+                { text: "Carnes rojas intensas, caza o estofados condimentados", profile: "tinto_fuerte" },
+                { text: "Carnes blancas, aves a la parrilla o cocina mediterránea ligera", profile: "tinto_suave" },
+                { text: "Pescados frescos, mariscos o platos vegetarianos ricos", profile: "blanco_fresco" }
+            ]
+        },
+        {
+            text: "Comportamiento en la boca: ¿Qué sensación tanina o de cuerpo prefiere al degustar un vino?",
+            options: [
+                { text: "Taninos firmes, cuerpo estructurado y final largo con gran potencia", profile: "tinto_fuerte" },
+                { text: "Taninos redondos, textura sedosa y acidez envolvente", profile: "tinto_suave" },
+                { text: "Sensación fresca, acidez vibrante y ligereza mineral cristalina", profile: "blanco_fresco" }
+            ]
+        },
+        {
+            text: "Paleta aromática: ¿Qué aromas o matices aromáticos despiertan más su curiosidad?",
+            options: [
+                { text: "Fruta negra madura, especias finas (pimienta) y notas tostadas de madera", profile: "tinto_fuerte" },
+                { text: "Fruta roja fresca (fresa, frambuesa) y delicadas notas florales de violeta", profile: "tinto_suave" },
+                { text: "Cítricos frescos, frutas tropicales y matices de flor de azahar", profile: "blanco_fresco" }
+            ]
+        },
+        {
+            text: "¿En qué ambiente y temperatura de servicio prefiere disfrutar de su copa?",
+            options: [
+                { text: "A temperatura de bodega (16° - 18°C) en una cena elegante y reposada", profile: "tinto_fuerte" },
+                { text: "Ligeramente fresco (14° - 16°C) en una reunión informal de confort", profile: "tinto_suave" },
+                { text: "Muy fresco (10° - 12°C) como aperitivo soleado o comida al aire libre", profile: "blanco_fresco" }
+            ]
+        },
+        {
+            text: "¿Qué nivel de complejidad, dulzor o efervescencia le apetece explorar hoy?",
+            options: [
+                { text: "Un vino de gran concentración, guardado en barrica de roble y perfil de autor", profile: "tinto_fuerte" },
+                { text: "Equilibrio puro de fruta expresiva sin exceso de madera", profile: "tinto_suave" },
+                { text: "Aromas dulces concentrados o espumantes efervescentes para aperitivo", profile: "especial" }
+            ]
+        },
+        {
+            text: "¿Qué tipo de experiencia gastronómica está buscando para esta ocasión?",
+            options: [
+                { text: "Una maridaje con platos tradicionales de horneado lento o cocina de caza", profile: "tinto_fuerte" },
+                { text: "Una cena versátil con pastas, quesos suaves o guisos caseros", profile: "tinto_suave" },
+                { text: "Un maridaje con cocina asiática, sushi, mariscos o ensaladas frescas", profile: "blanco_fresco" }
+            ]
+        },
+        {
+            text: "En cuanto al envejecimiento y crianza, ¿qué prefiere sentir en la copa?",
+            options: [
+                { text: "Complejidad de años en barrica y botella con notas ahumadas y terrosas", profile: "tinto_fuerte" },
+                { text: "Sutil toque de madera que respeta la vitalidad de la fruta silvestre", profile: "tinto_suave" },
+                { text: "Sin barrica o madera muy sutil: máxima frescura y pureza varietal", profile: "blanco_fresco" }
+            ]
+        },
+        {
+            text: "Si tuviera que elegir el momento ideal para descorchar, ¿cuál sería?",
+            options: [
+                { text: "Un brindis de celebración con postres, chocolate oscuro o quesos azules", profile: "especial" },
+                { text: "Una sobremesa tranquila junto a una buena conversación al final del día", profile: "tinto_fuerte" },
+                { text: "Una comida informal o un aperitivo para abrir el apetito antes de comer", profile: "blanco_fresco" }
+            ]
+        }
+    ],
+    pt: [
+        {
+            text: "Que tipo de carnes ou proteínas prefere acompanhar nas suas refeições principais?",
+            options: [
+                { text: "Carnes vermelhas intensas, caça ou guisados condimentados", profile: "tinto_fuerte" },
+                { text: "Carnes brancas, aves grelhadas ou cozinha mediterrânica leve", profile: "tinto_suave" },
+                { text: "Peixes frescos, mariscos ou pratos vegetarianos ricos", profile: "blanco_fresco" }
+            ]
+        },
+        {
+            text: "Comportamento na boca: Que sensação prefere ao degustar um vinho?",
+            options: [
+                { text: "Taninos firmes, corpo estruturado e final longo com grande potência", profile: "tinto_fuerte" },
+                { text: "Taninos macios e redondos com acidez viva e sedosa", profile: "tinto_suave" },
+                { text: "Acidez vibrante, textura cristalina e leveza mineral", profile: "blanco_fresco" }
+            ]
+        },
+        {
+            text: "Paleta aromática: Que aromas considera mais atraentes?",
+            options: [
+                { text: "Fruta preta madura, especiarias (pimenta preta) e notas tostadas", profile: "tinto_fuerte" },
+                { text: "Fruta vermelha fresca (morango, framboesa) e delicadas notas florais", profile: "tinto_suave" },
+                { text: "Citrinos frescos, fruta tropical e nuances de flor de laranjeira", profile: "blanco_fresco" }
+            ]
+        },
+        {
+            text: "Em que ambiente e temperatura de serviço prefere desfrutar do seu copo?",
+            options: [
+                { text: "A temperatura de adega (16° - 18°C) num jantar elegante e pausado", profile: "tinto_fuerte" },
+                { text: "Ligeiramente fresco (14° - 16°C) num convívio informal de conforto", profile: "tinto_suave" },
+                { text: "Muito fresco (10° - 12°C) como aperitivo ao sol ou refeição leve", profile: "blanco_fresco" }
+            ]
+        },
+        {
+            text: "Que nível de complexidade, doçura ou efervescência deseja explorar hoje?",
+            options: [
+                { text: "Um vinho de grande concentração, estagiado em barrica e perfil marcante", profile: "tinto_fuerte" },
+                { text: "Equilíbrio puro de fruta expressiva sem excesso de madeira", profile: "tinto_suave" },
+                { text: "Aromas doces ou espumantes vibrantes para aperitivo", profile: "especial" }
+            ]
+        },
+        {
+            text: "Que tipo de experiência gastronómica procura para esta ocasião?",
+            options: [
+                { text: "Harmonização com pratos tradicionais de forno ou caça", profile: "tinto_fuerte" },
+                { text: "Jantar versátil com massas, queijos suaves ou pratos confortáveis", profile: "tinto_suave" },
+                { text: "Cozinha asiática, sushi, marisco ou saladas frescas", profile: "blanco_fresco" }
+            ]
+        },
+        {
+            text: "Em relação ao estágio em madeira, o que prefere sentir no copo?",
+            options: [
+                { text: "Complexidade de anos em barrica com notas fumadas e especiadas", profile: "tinto_fuerte" },
+                { text: "Toque subtil de madeira que respeita a fruta silvestre", profile: "tinto_suave" },
+                { text: "Sem madeira: máxima frescura e pureza varietal", profile: "blanco_fresco" }
+            ]
+        },
+        {
+            text: "Se tivesse de escolher o momento ideal para abrir a garrafa, qual seria?",
+            options: [
+                { text: "Um brinde de celebração com sobremesas, chocolate ou queijos azuis", profile: "especial" },
+                { text: "Uma conversa tranquila ao final do dia", profile: "tinto_fuerte" },
+                { text: "Um aperitivo fresco para abrir o apetite antes de almoço", profile: "blanco_fresco" }
+            ]
+        }
+    ],
+    en: [
+        {
+            text: "What kind of meats or main proteins do you prefer pairing?",
+            options: [
+                { text: "Rich red meats, game, or spiced stews", profile: "tinto_fuerte" },
+                { text: "White meats, grilled poultry, or light Mediterranean fare", profile: "tinto_suave" },
+                { text: "Fresh fish, seafood, or delicate vegetarian dishes", profile: "blanco_fresco" }
+            ]
+        },
+        {
+            text: "Palate Behavior: What sensation do you enjoy most on the palate?",
+            options: [
+                { text: "Firm tannins, rich volume, and a structured, long finish", profile: "tinto_fuerte" },
+                { text: "Smooth, rounded tannins with balanced, lively acidity", profile: "tinto_suave" },
+                { text: "Vibrant acidity, crisp texture, and mineral freshness", profile: "blanco_fresco" }
+            ]
+        },
+        {
+            text: "Aromatic Palette: Which aromas appeal most to your senses?",
+            options: [
+                { text: "Ripe dark fruit, black pepper spices, and subtle oak toast", profile: "tinto_fuerte" },
+                { text: "Fresh red fruits (strawberry, raspberry) and floral undertones", profile: "tinto_suave" },
+                { text: "Fresh citrus, tropical fruit, and delicate orange blossom", profile: "blanco_fresco" }
+            ]
+        },
+        {
+            text: "What is your preferred serving occasion and temperature?",
+            options: [
+                { text: "Cellar temperature (16° - 18°C) during a formal dinner", profile: "tinto_fuerte" },
+                { text: "Slightly cool (14° - 16°C) for a relaxed, comfortable meal", profile: "tinto_suave" },
+                { text: "Chilled (10° - 12°C) as a sunny aperitif or light lunch", profile: "blanco_fresco" }
+            ]
+        },
+        {
+            text: "What level of complexity, sweetness or fizz would you like to explore?",
+            options: [
+                { text: "Concentrated oak-aged single vineyard reserves", profile: "tinto_fuerte" },
+                { text: "Pure expressive fruit harmony without heavy oak influence", profile: "tinto_suave" },
+                { text: "Sweet dessert complexity or vibrant sparkling aperitifs", profile: "especial" }
+            ]
+        },
+        {
+            text: "What kind of dining experience are you aiming for today?",
+            options: [
+                { text: "Pairing with rich slow-cooked roast meats or game", profile: "tinto_fuerte" },
+                { text: "A versatile meal with pasta, mild cheeses or comfort food", profile: "tinto_suave" },
+                { text: "Asian cuisine, sushi, shellfish or crisp salads", profile: "blanco_fresco" }
+            ]
+        },
+        {
+            text: "Regarding oak aging, what style do you prefer in your glass?",
+            options: [
+                { text: "Complex oak character with smoky and spicy notes", profile: "tinto_fuerte" },
+                { text: "Subtle oak influence preserving bright wild fruit", profile: "tinto_suave" },
+                { text: "Unoaked or crisp profile with pure varietal freshness", profile: "blanco_fresco" }
+            ]
+        },
+        {
+            text: "When would be the ideal moment to cork open this bottle?",
+            options: [
+                { text: "A celebratory toast with rich desserts, dark chocolate or blue cheeses", profile: "especial" },
+                { text: "Unwinding after dinner with quiet conversation", profile: "tinto_fuerte" },
+                { text: "A refreshing aperitif before a sunny meal", profile: "blanco_fresco" }
+            ]
+        }
+    ],
+    zh: [
+        {
+            text: "您平时更喜欢搭配哪类肉类或主菜？",
+            options: [
+                { text: "浓郁的红肉、野味或辛香炖肉", profile: "tinto_fuerte" },
+                { text: "白肉、烤禽类或轻盈的地中海菜肴", profile: "tinto_suave" },
+                { text: "新鲜鱼类、海鲜或精致素食", profile: "blanco_fresco" }
+            ]
+        },
+        {
+            text: "口感偏好：在品尝葡萄酒时，您更喜欢哪种口中表现？",
+            options: [
+                { text: "单宁紧实、结构饱满且余味悠长", profile: "tinto_fuerte" },
+                { text: "单宁柔和圆润，酸度活泼丝滑", profile: "tinto_suave" },
+                { text: "酸度明快，质地清澈并带有矿物质爽朗感", profile: "blanco_fresco" }
+            ]
+        },
+        {
+            text: "香味偏好：哪种香气最吸引您的嗅觉？",
+            options: [
+                { text: "成熟黑果、黑胡椒香料及橡木烘烤香", profile: "tinto_fuerte" },
+                { text: "新鲜红果（草莓、覆盆子）及优雅花香", profile: "tinto_suave" },
+                { text: "清新柑橘、热带水果及橙花芬芳", profile: "blanco_fresco" }
+            ]
+        },
+        {
+            text: "您喜欢在什么场合与饮用温度下享用？",
+            options: [
+                { text: "室温 (16° - 18°C)，正餐聚会时细细品味", profile: "tinto_fuerte" },
+                { text: "微凉 (14° - 16°C)，轻松舒适的日常聚餐", profile: "tinto_suave" },
+                { text: "充分冰镇 (10° - 12°C)，作为开胃酒或搭配午餐", profile: "blanco_fresco" }
+            ]
+        },
+        {
+            text: "您今天想尝试什么程度的复杂度或甜度？",
+            options: [
+                { text: "陈酿于橡木桶、风味浓郁的旗舰款红葡萄酒", profile: "tinto_fuerte" },
+                { text: "果香纯正纯粹、不过度受橡木影响的款式", profile: "tinto_suave" },
+                { text: "甜美浓郁的晚收晚摘或活力四射的起泡酒", profile: "especial" }
+            ]
+        },
+        {
+            text: "您今天希望体验什么样的美食搭配？",
+            options: [
+                { text: "搭配传统慢烤肉类或野味大餐", profile: "tinto_fuerte" },
+                { text: "搭配意面、轻度奶酪或家常舒适美食", profile: "tinto_suave" },
+                { text: "搭配亚洲料理、寿司、海鲜或清爽沙拉", profile: "blanco_fresco" }
+            ]
+        },
+        {
+            text: "关于橡木桶陈酿，您更偏好酒杯中的哪种风味？",
+            options: [
+                { text: "带有烟熏与香料气息的丰富橡木层次", profile: "tinto_fuerte" },
+                { text: "微弱的橡木感，突出野生红果的鲜活", profile: "tinto_suave" },
+                { text: "无橡木桶影响，追求极致清爽与品种纯粹", profile: "blanco_fresco" }
+            ]
+        },
+        {
+            text: "如果选择一个开启酒瓶的最佳时刻，会是何时？",
+            options: [
+                { text: "搭配甜点、黑巧克力或蓝纹奶酪的庆祝时刻", profile: "especial" },
+                { text: "餐后与好友静静品味交流的时光", profile: "tinto_fuerte" },
+                { text: "阳光午餐前作为唤醒味蕾的开胃清凉美酒", profile: "blanco_fresco" }
+            ]
+        }
+    ],
+    ja: [
+        {
+            text: "お食事の際、どのような肉類・メイン料理を好まれますか？",
+            options: [
+                { text: "濃厚な赤身肉、ジビエ、スパイスの効いた煮込み料理", profile: "tinto_fuerte" },
+                { text: "鶏肉などの白身肉、グリル、軽やかな地中海料理", profile: "tinto_suave" },
+                { text: "新鮮な魚介類、シーフード、ヘルシーな野菜料理", profile: "blanco_fresco" }
+            ]
+        },
+        {
+            text: "口当たり（味わい）：ワインを口に含んだ際、どの感覚が好みですか？",
+            options: [
+                { text: "しっかりとしたタンニン、豊かなボリューム感と長い余韻", profile: "tinto_fuerte" },
+                { text: "まろやかなタンニンと生き生きとした滑らかな酸味", profile: "tinto_suave" },
+                { text: "フレッシュで活力ある酸味、ミネラル感と清涼感", profile: "blanco_fresco" }
+            ]
+        },
+        {
+            text: "アロマの好み：どのような香りに最も惹かれますか？",
+            options: [
+                { text: "熟した黒い果実、黒胡椒のスパイシーさと香ばしい樽香", profile: "tinto_fuerte" },
+                { text: "フレッシュな赤い果実（イチゴ、フランボワーズ）と花のアロマ", profile: "tinto_suave" },
+                { text: "爽やかなシトラス、トロピカルフルーツ、オレンジの花の香り", profile: "blanco_fresco" }
+            ]
+        },
+        {
+            text: "どのようなシチュエーションや温度帯で楽しみたいですか？",
+            options: [
+                { text: "常温（16〜18℃）でゆっくり楽しむフォーマルな夕食", profile: "tinto_fuerte" },
+                { text: "少し冷やして（14〜16℃）リラックスした心地よい時間", profile: "tinto_suave" },
+                { text: "しっかり冷やして（10〜12℃）食前酒や軽やかなランチ", profile: "blanco_fresco" }
+            ]
+        },
+        {
+            text: "本日はどのような複雑さや甘みのスタイルを試したいですか？",
+            options: [
+                { text: "オーク樽でじっくり熟成させた濃厚で深みのあるリゼルヴァ", profile: "tinto_fuerte" },
+                { text: "樽感を抑えたピュアで表現力豊かな果実味", profile: "tinto_suave" },
+                { text: "極上の甘口貴腐ワインや爽快なスパークリング", profile: "especial" }
+            ]
+        },
+        {
+            text: "本日楽しみたいお料理とのマリアージュ体験はどのようなものですか？",
+            options: [
+                { text: "じっくりローストした伝統肉料理やジビエとのペアリング", profile: "tinto_fuerte" },
+                { text: "パスタやマイルドなチーズ、家庭的な温かい料理と", profile: "tinto_suave" },
+                { text: "アジアン料理、お寿司、魚介類、新鮮なサラダと", profile: "blanco_fresco" }
+            ]
+        },
+        {
+            text: "樽熟成について、グラスの中でどのような味わいを感じたいですか？",
+            options: [
+                { text: "スモーキーでスパイシーな重厚な樽のニュアンス", profile: "tinto_fuerte" },
+                { text: "果実味を邪魔しない控えめで上品な樽の余韻", profile: "tinto_suave" },
+                { text: "樽なし：ブドウ本来のピュアなみずみずしさとフレッシュ感", profile: "blanco_fresco" }
+            ]
+        },
+        {
+            text: "ボトルを開ける最高のタイミングを選ぶとしたら？",
+            options: [
+                { text: "デザートやダークチョコ、ブルーチーズと合わせる特別な乾杯", profile: "especial" },
+                { text: "食後に静かな会話を楽しみながら味わうひととき", profile: "tinto_fuerte" },
+                { text: "陽のあたるランチ前に食欲をそそる一杯として", profile: "blanco_fresco" }
+            ]
+        }
+    ],
+    fr: [
+        {
+            text: "Quel type de viande ou plat principal préférez-vous accompagner ?",
+            options: [
+                { text: "Viandes rouges intenses, gibier ou plats en sauce épicés", profile: "tinto_fuerte" },
+                { text: "Viandes blanches, volailles grillées ou cuisine méditerranéenne", profile: "tinto_suave" },
+                { text: "Poissons frais, fruits de mer ou plats végétariens", profile: "blanco_fresco" }
+            ]
+        },
+        {
+            text: "En bouche : Quelle sensation préférez-vous lors de la dégustation ?",
+            options: [
+                { text: "Tanins fermes, beau volume et finale longue structurée", profile: "tinto_fuerte" },
+                { text: "Tanins souples et enrobés avec une acidité fraîche et soyeuse", profile: "tinto_suave" },
+                { text: "Acidité vibrante, texture cristalline et fraîcheur minérale", profile: "blanco_fresco" }
+            ]
+        },
+        {
+            text: "Palette aromatique : Quels arômes vous séduisent le plus ?",
+            options: [
+                { text: "Fruits noirs mûrs, poivre noir et notes boisées torréfiées", profile: "tinto_fuerte" },
+                { text: "Fruits rouges frais (fraise, framboise) et subtiles notes florales", profile: "tinto_suave" },
+                { text: "Agrumes frais, fruits tropicaux et fleurs d'oranger", profile: "blanco_fresco" }
+            ]
+        },
+        {
+            text: "À quel moment et température préférez-vous déguster votre verre ?",
+            options: [
+                { text: "À température ambiante (16° - 18°C) lors d'un dîner formel", profile: "tinto_fuerte" },
+                { text: "Légèrement frais (14° - 16°C) pour un repas convivial", profile: "tinto_suave" },
+                { text: "Bien frais (10° - 12°C) en apéritif ensoleillé ou déjeuner léger", profile: "blanco_fresco" }
+            ]
+        },
+        {
+            text: "Quel niveau de complexité, douceur ou effervescence souhaitez-vous explorer ?",
+            options: [
+                { text: "Un grand vin concentré élevé en barrique de caractère", profile: "tinto_fuerte" },
+                { text: "Un équilibre pur de fruit expressif sans excès de bois", profile: "tinto_suave" },
+                { text: "Un vin doux complexe de récolte tardive ou un effervescent vif", profile: "especial" }
+            ]
+        },
+        {
+            text: "Quelle expérience gastronomique recherchez-vous aujourd'hui ?",
+            options: [
+                { text: "Accorder avec des rôtis traditionnels ou du gibier en sauce", profile: "tinto_fuerte" },
+                { text: "Un repas polyvalent avec des pâtes, fromages doux ou plats confort", profile: "tinto_suave" },
+                { text: "Cuisine asiatique, sushis, crustacés ou salades croquantes", profile: "blanco_fresco" }
+            ]
+        },
+        {
+            text: "Concernant l'élevage en fût de chêne, quel style préférez-vous ?",
+            options: [
+                { text: "Notes boisées complexes, torréfiées et épicées", profile: "tinto_fuerte" },
+                { text: "Touche boisée très subtile préservant l'éclat du fruit", profile: "tinto_suave" },
+                { text: "Sans bois : fraîcheur pure et expression variétale directe", profile: "blanco_fresco" }
+            ]
+        },
+        {
+            text: "Si vous deviez choisir le moment parfait pour déboucher la bouteille ?",
+            options: [
+                { text: "Un toast de célébration avec chocolats noirs ou fromages bleus", profile: "especial" },
+                { text: "Se détendre après le dîner autour d'une belle conversation", profile: "tinto_fuerte" },
+                { text: "Un apéritif rafraîchissant pour ouvrir l'appétit avant le repas", profile: "blanco_fresco" }
+            ]
+        }
+    ]
+};
+
+// =========================================================================
+// 2. DICCIONARIO MULTILINGÜE DE LA INTERFAZ (6 IDIOMAS)
+// =========================================================================
+const i18n = {
+    es: {
+        heroSubtitle: "Descubra la esencia pura del Douro a través de nuestro test interactivo y catálogo exclusivo.",
+        navSommelier: "Qual é o teu vinho",
+        navMenu: "Menú Digital",
+        navHistory: "Nuestra Historia",
+        quizBadge: "Test de Preferencias",
+        quizTitle: "Encuentre su Vino Ideal",
+        stepText: "Pregunta",
+        txtPrev: "Anterior",
+        txtTip: "Seleccione una opción para avanzar",
+        resSubtitle: "Recomendación Personalizada",
+        resTitle: "Su Maridaje Perfecto",
+        lblProfile: "Perfil Seleccionado",
+        lblPairing: "Plato Recomendado & Maridaje",
+        btnRestart: "Hacer el Test de Nuevo",
+        menuTitle: "Carta Digital de Vinos",
+        menuDesc: "Colección oficial extraída de las fichas técnicas de Quinta de Ventozelo.",
+        filterAll: "Todos",
+        filterTinto: "Tintos",
+        filterBranco: "Brancos",
+        filterEspecial: "Especiales",
+        histHeader: "Historia de Quinta de Ventozelo",
+        histQuote: "\"Un anfiteatro natural único a orillas del río Duero, donde el silencio y la viticultura conviven desde hace siglos.\"",
+        histP1: "Ubicada en San João da Pesqueira, en pleno corazón del Douro – la región vitivinícola demarcada más antigua del mundo –, la Quinta de Ventozelo es una de las propiedades más imponentes y antiguas de la región. Sus orígenes documentados se remontan al siglo XVI.",
+        histSub1: "Terroir Excepcional",
+        histP2: "Con más de 400 hectáreas, de las cuales 200 están dedicadas a la viña en laderas escarpadas de esquisto, Ventozelo posee un microclima único con variadas altitudes.",
+        histSub2: "Tradición e Innovación",
+        histP3: "Manteniendo vivas las variedades autóctonas portuguesas, el enólogo José Manuel Sousa Soares combina la tradición de lagar con tecnología moderna.",
+        histP4: "Hoy en día, Quinta de Ventozelo es un santuario de la naturaleza y el enoturismo donde cada botella rinde homenaje a la tierra."
+    },
+    pt: {
+        heroSubtitle: "Descubra a essência pura do Douro através do nosso teste interativo e catálogo exclusivo.",
+        navSommelier: "Qual é o teu vinho",
+        navMenu: "Menu Digital",
+        navHistory: "Nossa História",
+        quizBadge: "Teste de Preferências",
+        quizTitle: "Encontre o seu Vinho Ideal",
+        stepText: "Pergunta",
+        txtPrev: "Anterior",
+        txtTip: "Selecione uma opção para avançar",
+        resSubtitle: "Recomendação Personalizada",
+        resTitle: "A sua Harmonização Perfeita",
+        lblProfile: "Perfil Selecionado",
+        lblPairing: "Prato Recomendado & Harmonização",
+        btnRestart: "Fazer o Teste Novamente",
+        menuTitle: "Carta Digital de Vinos",
+        menuDesc: "Coleção oficial extraída das fichas técnicas da Quinta de Ventozelo.",
+        filterAll: "Todos",
+        filterTinto: "Tintos",
+        filterBranco: "Brancos",
+        filterEspecial: "Especiais",
+        histHeader: "História da Quinta de Ventozelo",
+        histQuote: "\"Um anfiteatro natural único às margens do rio Douro, onde o silêncio e a viticultura convivem há séculos.\"",
+        histP1: "Localizada em S. João da Pesqueira, no coração do Douro – a região vinícola demarcada mais antiga do mundo –, a Quinta de Ventozelo é uma das propriedades mais imponentes e antigas da região. As suas origens documentadas recuam ao século XVI.",
+        histSub1: "Terroir Excecional",
+        histP2: "Com mais de 400 hectares, dos quais 200 são dedicados à vinha em encostas xistosas, Ventozelo possui um microclima único com variadas altitudes.",
+        histSub2: "Tradição e Inovação",
+        histP3: "Mantendo vivas as castas autóctones portuguesas, o enólogo José Manuel Sousa Soares alia a tradição do lagar à tecnologia moderna.",
+        histP4: "Hoje, a Quinta de Ventozelo é um santuário de natureza e enoturismo onde cada garrafa presta homenagem à terra."
+    },
+    en: {
+        heroSubtitle: "Discover the pure essence of the Douro through our interactive quiz and exclusive digital catalogue.",
+        navSommelier: "Qual é o teu vinho",
+        navMenu: "Digital Menu",
+        navHistory: "Our History",
+        quizBadge: "Preferences Test",
+        quizTitle: "Find Your Ideal Wine",
+        stepText: "Question",
+        txtPrev: "Previous",
+        txtTip: "Select an option to proceed",
+        resSubtitle: "Personalized Recommendation",
+        resTitle: "Your Perfect Pairing",
+        lblProfile: "Selected Profile",
+        lblPairing: "Recommended Dish & Pairing",
+        btnRestart: "Take Test Again",
+        menuTitle: "Digital Wine List",
+        menuDesc: "Official collection compiled directly from Quinta de Ventozelo technical sheets.",
+        filterAll: "All",
+        filterTinto: "Reds",
+        filterBranco: "Whites",
+        filterEspecial: "Specials",
+        histHeader: "History of Quinta de Ventozelo",
+        histQuote: "\"A unique natural amphitheater on the banks of the Douro River, where silence and winemaking have coexisted for centuries.\"",
+        histP1: "Located in S. João da Pesqueira, at the heart of the Douro – the world's oldest demarcated wine region –, Quinta de Ventozelo is one of the most imposing estates in the valley dating back to the 16th century.",
+        histSub1: "Exceptional Terroir",
+        histP2: "Spanning over 400 hectares with 200 dedicated to vineyards on schist slopes, Ventozelo enjoys a unique microclimate and altitude variety.",
+        histSub2: "Tradition & Innovation",
+        histP3: "Preserving indigenous Portuguese grape varieties, winemaker José Manuel Sousa Soares combines traditional granite lagares with modern enology.",
+        histP4: "Today, Quinta de Ventozelo is a sanctuary for nature and wine tourism, honoring the terroir in every bottle."
+    },
+    zh: {
+        heroSubtitle: "通过互动测试与独家数字酒单，探索杜罗河谷 Ventozelo 庄园的纯粹精髓。",
+        navSommelier: "Qual é o teu vinho",
+        navMenu: "数字酒单",
+        navHistory: "酒庄历史",
+        quizBadge: "偏好测试",
+        quizTitle: "寻找您的理想葡萄酒",
+        stepText: "问题",
+        txtPrev: "上一题",
+        txtTip: "选择一个选项以继续",
+        resSubtitle: "个性化推荐",
+        resTitle: "您的完美餐酒搭配",
+        lblProfile: "匹配风味",
+        lblPairing: "推荐菜肴与搭配理由",
+        btnRestart: "重新测试",
+        menuTitle: "数字葡萄酒菜单",
+        menuDesc: "根据 Quinta de Ventozelo 技术彩页收录的官方酒款。",
+        filterAll: "全部",
+        filterTinto: "红葡萄酒",
+        filterBranco: "白葡萄酒",
+        filterEspecial: "特色酒款",
+        histHeader: "Quinta de Ventozelo 历史",
+        histQuote: "“杜罗河畔独特的天然梯田，数世纪以来静谧与葡萄栽培完美共存。”",
+        histP1: "Ventozelo 庄园位于杜罗河谷核心区的 S. João da Pesqueira，历史可追溯至 16 世纪。",
+        histSub1: "卓越的风土",
+        histP2: "拥有超过 400 公顷土地，其中 200 公顷为板岩斜坡葡萄园，微气候独一无二。",
+        histSub2: "传统与创新",
+        histP3: "酿酒师 José Manuel Sousa Soares 将传统花岗岩压榨槽与现代酿酒技术完美结合。",
+        histP4: "如今 Quinta de Ventozelo 既是优质葡萄酒的代名词，也是生态与葡萄酒旅游的圣地。"
+    },
+    ja: {
+        heroSubtitle: "インタラクティブ診察とデジタルメニューで、ドウロのキンタ・デ・ヴェントゼロの魅力をご体感ください。",
+        navSommelier: "Qual é o teu vinho",
+        navMenu: "デジタルメニュー",
+        navHistory: "クィンタの歴史",
+        quizBadge: "好み診断",
+        quizTitle: "あなたに最適なワインを探す",
+        stepText: "質問",
+        txtPrev: "前へ",
+        txtTip: "選択肢を選んで進んでください",
+        resSubtitle: "パーソナライズされたおすすめ",
+        resTitle: "最高のペアリング",
+        lblProfile: "選択されたスタイル",
+        lblPairing: "おすすめ料理とペアリング理由",
+        btnRestart: "もう一度診断する",
+        menuTitle: "デジタルワインリスト",
+        menuDesc: "Quinta de Ventozelo 公式テクニカルシートに基づくワイン一覧。",
+        filterAll: "すべて",
+        filterTinto: "赤ワイン",
+        filterBranco: "白ワイン",
+        filterEspecial: "特別・スパークリング",
+        histHeader: "Quinta de Ventozelo の歴史",
+        histQuote: "「ドウロ川のほとりに広がる天然の円形劇場。何世紀にもわたり静寂とワイン造りが共存しています。」",
+        histP1: "ドウロの中心地S. João da Pesqueiraに位置し、16世紀にまで遡る歴史を持つ高貴なワイナリーです。",
+        histSub1: "傑出したテロワール",
+        histP2: "400ヘクタールを超える敷地と粘板岩の急斜面ぶどう園が、独特のマイクロクライマットを生み出します。",
+        histSub2: "伝統と革新",
+        histP3: "醸造家José Manuel Sousa Soaresは伝統的なラガールと現代技術を融合させています。",
+        histP4: "自然とワインツーリズムの聖地として、一本一本のボトルに大地の情熱が込められています。"
+    },
+    fr: {
+        heroSubtitle: "Découvrez l'essence pure du Douro à travers notre test interactif et notre carte numérique exclusive.",
+        navSommelier: "Qual é o teu vinho",
+        navMenu: "Menu Numérique",
+        navHistory: "Notre Histoire",
+        quizBadge: "Test de Préférences",
+        quizTitle: "Trouvez Votre Vin Idéal",
+        stepText: "Question",
+        txtPrev: "Précédent",
+        txtTip: "Sélectionnez une option pour continuer",
+        resSubtitle: "Recommandation Personnalisée",
+        resTitle: "Votre Accord Parfait",
+        lblProfile: "Profil Sélectionné",
+        lblPairing: "Plat Recommandé & Accord",
+        btnRestart: "Refaire le Test",
+        menuTitle: "Carte des Vins Numérique",
+        menuDesc: "Collection officielle extraite des fiches techniques de Quinta de Ventozelo.",
+        filterAll: "Tous",
+        filterTinto: "Rouges",
+        filterBranco: "Blancs",
+        filterEspecial: "Spéciaux",
+        histHeader: "Histoire de Quinta de Ventozelo",
+        histQuote: "\"Un amphithéâtre naturel unique au bord du Douro, où le silence et la viticulture coexistent depuis des siècles.\"",
+        histP1: "Située à S. João da Pesqueira au cœur du Douro, Quinta de Ventozelo est l'un des domaines les plus majestueux remontant au XVIe siècle.",
+        histSub1: "Terroir Exceptionnel",
+        histP2: "Avec plus de 400 hectares dont 200 de vignes sur pentes schisteuses, Ventozelo jouit d'un microclimat et d'une altitude uniques.",
+        histSub2: "Tradition et Innovation",
+        histP3: "L'œnologue José Manuel Sousa Soares allie les lagares traditionnels en granite aux technologies œnologiques modernes.",
+        histP4: "Aujourd'hui, Quinta de Ventozelo est un sanctuaire de biodiversité et d'œnotourisme d'exception."
+    }
+};
+
+// =========================================================================
+// 3. CATÁLOGO OFICIAL EXTRAÍDO DEL PDF DE QUINTA DE VENTOZELO (21 VINOS)
+// =========================================================================
+const wineCatalog = [
+    {
+        id: "w1",
+        name: "QUINTA DE VENTOZELO RESERVA 2023",
+        type: "tinto",
+        year: "2023",
+        doc: "DOC Douro",
+        enology: "José Manuel Sousa Soares",
+        grapes: "Touriga Nacional, Touriga Franca, Tinta Roriz e Alicante Bouschet",
+        profile: "tinto_suave",
+        tasting: "Cor granada intensa, e perfil aromático frutado, sobressaindo a fruta vermelha madura, envolta em notas delicadas florais. Taninos macios, equilibrados com acidez atraente.",
+        pairing: "Combinação perfeita com grande variedade de queijos, carnes e cozinha mediterrânea.",
+        temp: "16° - 18°C",
+        alcohol: "13.5%",
+        why: "Sus taninos redondos y acidez atractiva equilibran la riqueza de quesos curados y guisos mediterráneos sin saturar el paladar."
+    },
+    {
+        id: "w2",
+        name: "QUINTA DE VENTOZELO ROSÉ 2024",
+        type: "especial",
+        year: "2024",
+        doc: "DOC Douro",
+        enology: "José Manuel Sousa Soares",
+        grapes: "Tinta Roriz",
+        profile: "blanco_fresco",
+        tasting: "Cor rosa-pálido suave. Aroma intenso a frutos vermelhos maduros (framboesas) com notas vegetais discretas. Acidez vibrante e elegante volume de boca.",
+        pairing: "Aperitivo ou a acompanhar pratos leves de peixe e carnes brancas.",
+        temp: "10° - 12°C",
+        alcohol: "12.5%",
+        why: "La acidez vibrante y el perfil frutal fresco de la Tinta Roriz cortan la grasa suave de las carnes blancas e intensifican la frescura del pescado."
+    },
+    {
+        id: "w3",
+        name: "ESSÊNCIA DE VENTOZELO 2016",
+        type: "tinto",
+        year: "2016",
+        doc: "DOC Douro",
+        enology: "José Manuel Sousa Soares",
+        grapes: "Touriga Nacional e Touriga Franca",
+        profile: "tinto_fuerte",
+        tasting: "Aromas intensos de fruta preta madura e especiarias (pimenta preta), ligeiro tostado. Vibrante na boca com taninos redondos e macios.",
+        pairing: "Pratos de carne, caça ou pratos fortemente condimentados.",
+        temp: "16° - 18°C",
+        alcohol: "14.5%",
+        why: "Sus 18 meses en barrica de roble francés y notas de pimenta preta requieren platos con carácter aromático fuerte y alta proteína como la caza."
+    },
+    {
+        id: "w4",
+        name: "QUINTA DE VENTOZELO MALVASIA FINA 2023",
+        type: "branco",
+        year: "2023",
+        doc: "DOC Douro",
+        enology: "José Manuel Sousa Soares",
+        grapes: "Malvasia Fina",
+        profile: "blanco_fresco",
+        tasting: "Aparência cristalina. Perfil fresco com notas de fruta tropical e citrinos. Em prova sobressai a frescura e firmeza com perfil contido.",
+        pairing: "Aperitivo, pratos leves de peixe, carnes brancas e gratinados de legumes.",
+        temp: "10° - 12°C",
+        alcohol: "12.5%",
+        why: "Un monovarietal de frescura firme que resalta la dulzura natural de los vegetales asados y ensaladas mediterráneas."
+    },
+    {
+        id: "w5",
+        name: "QUINTA DE VENTOZELO TRADITIONAL BLEND 2024",
+        type: "tinto",
+        year: "2024",
+        doc: "DOC Douro",
+        enology: "José Manuel Sousa Soares",
+        grapes: "Touriga Nacional, Touriga Franca e Tinta Roriz",
+        profile: "tinto_suave",
+        tasting: "Cor rubi azulada, notas de fruta preta e nuances florais. Acidez viva e boa estrutura com final longo, persistente e fresco.",
+        pairing: "Apreciado a solo, ou a acompanhar queijos, carnes e cozinha mediterrânica.",
+        temp: "16° - 18°C",
+        alcohol: "14.5%",
+        why: "Su equilibrio atemporal de variedades autóctonas portuguesas ofrece la versatilidad ideal tanto para degustar solo como con tablas de embutidos."
+    },
+    {
+        id: "w6",
+        name: "QUINTA DE VENTOZELO TINTA BARROCA 2020",
+        type: "tinto",
+        year: "2020",
+        doc: "DOC Douro",
+        enology: "José Manuel Sousa Soares",
+        grapes: "Tinta Barroca",
+        profile: "tinto_suave",
+        tasting: "Cor rubi intensa, aroma rico a fruta vermelha fresca e toque floral. Volume de boca marcante com taninos macios e acidez equilibrada.",
+        pairing: "Queijos de intensidade média, carnes brancas grelhadas e comida de conforto.",
+        temp: "16° - 18°C",
+        alcohol: "14.5%",
+        why: "La calidez jugosa de la Tinta Barroca complementa platos de confort como guisos caseros y quesos semicurados sin abrumar."
+    },
+    {
+        id: "w7",
+        name: "QUINTA DE VENTOZELO TINTO CÃO 2022",
+        type: "tinto",
+        year: "2022",
+        doc: "DOC Douro",
+        enology: "José Manuel Sousa Soares",
+        grapes: "Tinto Cão",
+        profile: "tinto_suave",
+        tasting: "Cor rubi aberta, aroma fresco a fruta com notas florais. Taninos sedosos, grande elegância, frescura marcante e equilíbrio.",
+        pairing: "Pratos leves de carnes brancas ou grelhadas, pratos vegetarianos simples.",
+        temp: "16° - 18°C",
+        alcohol: "13.5%",
+        why: "La mítica casta Tinto Cão aporta una elegancia casi etérea y taninos sedosos que no tapan la finura de las carnes magras."
+    },
+    {
+        id: "w8",
+        name: "DALVA ESPUMANTE BRUTO ROSÉ 2024",
+        type: "especial",
+        year: "2024",
+        doc: "IGP Duriense",
+        enology: "José Manuel Sousa Soares",
+        grapes: "Tinta Barroca, Tinta Amarela",
+        profile: "especial",
+        tasting: "Tonalidade rosa-pálido, bolha fina e mousse delicada. Notas a frutos vermelhos, florais e vegetais frescos. Acidez vibrante.",
+        pairing: "Excelente aperitivo, peixes, mariscos e carnes brancas.",
+        temp: "10° - 12°C",
+        alcohol: "12.0%",
+        why: "El método Charmat con finas burbujas limpia el paladar entre bocados de mariscos e inicializa cualquier comida con garbo."
+    },
+    {
+        id: "w9",
+        name: "DALVA MOSCATEL DO DOURO",
+        type: "especial",
+        year: "NV",
+        doc: "DOP Moscatel",
+        enology: "José Manuel Sousa Soares",
+        grapes: "Moscatel Galego Branco",
+        profile: "especial",
+        tasting: "Cor dourada, aroma intenso a alfazema, compota de uvas e especiarias. Final cítrico, mentolado e muito persistente.",
+        pairing: "Ideal como aperitivo fresco ou a acompanhar sobremesas rica em frutos secos.",
+        temp: "8° - 10°C",
+        alcohol: "17.0%",
+        why: "Sus notas místicas de lavanda y compota de uva armonizan por contraste con postres de frutos secos o quesos de pasta azul."
+    },
+    {
+        id: "w10",
+        name: "QUINTA DE VENTOZELO GOUVEIO 2024",
+        type: "branco",
+        year: "2024",
+        doc: "DOC Douro",
+        enology: "José Manuel Sousa Soares",
+        grapes: "Gouveio",
+        profile: "blanco_fresco",
+        tasting: "Amarelo leve com reflexos esverdeados. Aromas cítricos frescos e flor de laranjeira. Acidez limpa e ataque amplo.",
+        pairing: "Pratos leves de carne branca, peixe grelhado e marisco.",
+        temp: "10° - 12°C",
+        alcohol: "13.0%",
+        why: "La acidez cortante y perfumada del Gouveio resalta el sabor del pescado a la parrilla con unas gotas de limón natural."
+    },
+    {
+        id: "w11",
+        name: "ESSÊNCIA DE VENTOZELO BRANCO 2019",
+        type: "branco",
+        year: "2019",
+        doc: "DOC Douro",
+        enology: "José Manuel Sousa Soares",
+        grapes: "70% Viosinho e 30% Malvasia Fina",
+        profile: "blanco_fresco",
+        tasting: "Toques fumados, especiarias e mel com casca de citrinos. Textura aveludada, complexa e elegante após 5 anos em garrafa.",
+        pairing: "Queijos maturados, foie gras, peixes gordos, carnes médias e risoto de cogumelos.",
+        temp: "12° - 14°C",
+        alcohol: "13.5%",
+        why: "Un blanco de fermentación en barrica y guarda prolongada con untuosidad idónea para risottos de setas o pescados grasos."
+    },
+    {
+        id: "w12",
+        name: "QUINTA DE VENTOZELO TINTA RORIZ 2021",
+        type: "tinto",
+        year: "2021",
+        doc: "DOC Douro",
+        enology: "José Manuel Sousa Soares",
+        grapes: "Tinta Roriz",
+        profile: "tinto_suave",
+        tasting: "Cor rubi, aromas a groselhas e morangos com nuances especiadas. Sedoso, com frescura e estrutura equilibradas.",
+        pairing: "Queijos intensos, peixes gordos assados, carnes vermelhas e caça.",
+        temp: "16° - 18°C",
+        alcohol: "13.5%",
+        why: "Combina la fruta silvestre madura con una ligereza sedosa que acompaña perfectamente pescados al horno de gran porte."
+    },
+    {
+        id: "w13",
+        name: "DALVA LATE HARVEST 2015",
+        type: "especial",
+        year: "2015",
+        doc: "DOC Douro",
+        enology: "José Manuel Sousa Soares",
+        grapes: "Boal",
+        profile: "especial",
+        tasting: "Palha dourada brilhante. Compota de citrinos, damasco e especiarias. Elevada concentração de fruto, doçura e acidez expressiva.",
+        pairing: "Foie gras, queijos cremosos, sobremesas de amêndoa ou tarte de limão.",
+        temp: "10° - 12°C",
+        alcohol: "12.0%",
+        why: "La podredumbre noble (Botrytis) confiere una concentración dulce equilibrada por acidez deslumbrante ideal para tartas cítricas."
+    },
+    {
+        id: "w14",
+        name: "QUINTA DE VENTOZELO VINTAGE PORT 2015",
+        type: "especial",
+        year: "2015",
+        doc: "DOP Porto",
+        enology: "José Manuel Sousa Soares",
+        grapes: "70% Touriga Franca, 30% Touriga Nacional, Tinto Cão e Sousão",
+        profile: "especial",
+        tasting: "Retinto violáceo. Aromas florais e fruta madura muito intensa (cassis, groselha) e mentol. Taninos firmes e final prolongado.",
+        pairing: "Queijos azuis fortes, sobremesas de chocolate negro ou para apreciação a solo.",
+        temp: "16° - 18°C",
+        alcohol: "20.0%",
+        why: "Un Porto de colección cuya potencia e intensidad de fruta en compota y graduación alcohólica armonizan con chocolates oscuros."
+    },
+    {
+        id: "w15",
+        name: "QUINTA DE VENTOZELO LOCI 2021",
+        type: "tinto",
+        year: "2021",
+        doc: "DOC Douro",
+        enology: "José Manuel Sousa Soares",
+        grapes: "50% Tinta Amarela, Touriga Franca, Touriga Nacional, Sousão, Alicante Bouschet",
+        profile: "tinto_fuerte",
+        tasting: "Aromas intensos a frutos silvestres, cereja e carácter vegetal/especiado da Tinta Amarela. Volumoso, taninos firmes e envolventes.",
+        pairing: "Cozinha tradicional portuguesa, pratos condimentados e caça.",
+        temp: "16° - 18°C",
+        alcohol: "14.0%",
+        why: "Un ensamblaje complejo encabezado por la Tinta Amarela con gran presencia vegetal y especiada para guisos de caza tradicional."
+    },
+    {
+        id: "w16",
+        name: "QUINTA DE VENTOZELO TOURIGA FRANCA 2022",
+        type: "tinto",
+        year: "2022",
+        doc: "DOC Douro",
+        enology: "José Manuel Sousa Soares",
+        grapes: "Touriga Franca",
+        profile: "tinto_fuerte",
+        tasting: "Cor granada intensa, notas de fruta vermelha com toque vegetal. Volume de boca admirável, taninos firmes envoltos em frescura.",
+        pairing: "Queijos, pratos condimentados, carnes vermelhas e caça.",
+        temp: "16° - 18°C",
+        alcohol: "13.0%",
+        why: "La espina dorsal del Douro expresa taninos de gran firmeza que maridan con las carnes rojas asadas a la leña."
+    },
+    {
+        id: "w17",
+        name: "DALVA ESPUMANTE BRUTO BRANCO 2024",
+        type: "especial",
+        year: "2024",
+        doc: "IGP Duriense",
+        enology: "José Manuel Sousa Soares",
+        grapes: "60% Viosinho, 20% Malvasia Fina, Gouveio, Rabigato",
+        profile: "blanco_fresco",
+        tasting: "Amarelo-pálido, bolha fina e contínua, mousse cremosa. Riqueza citrina e flores brancas. Acidez fresca no final.",
+        pairing: "Aperitivo, pratos leves de carnes brancas, peixes e mariscos.",
+        temp: "10° - 12°C",
+        alcohol: "12.0%",
+        why: "Cremosidad delicada que dinamiza el paladar y complementa aperitivos marinos sin saturar las papilas gustativas."
+    },
+    {
+        id: "w18",
+        name: "QUINTA DE VENTOZELO RESERVA BRANCO 2024",
+        type: "branco",
+        year: "2024",
+        doc: "DOC Douro",
+        enology: "José Manuel Sousa Soares",
+        grapes: "Viosinho, Malvasia Fina e Rabigato",
+        profile: "blanco_fresco",
+        tasting: "Amarelo citrino, aroma elegante e fresco com alperce e flores brancas. Equilibrado e envolvente na boca, acidez viva e untuosidade.",
+        pairing: "Combinação perfeita com peixes gordos e pratos de carnes brancas.",
+        temp: "12° - 14°C",
+        alcohol: "13.0%",
+        why: "Su paso parcial por barricas de roble aporta una ligera untuosidad que abraza pescados grasos como el bacalao o salmón."
+    },
+    {
+        id: "w19",
+        name: "QUINTA DE VENTOZELO TOURIGA NACIONAL 2021",
+        type: "tinto",
+        year: "2021",
+        doc: "DOC Douro",
+        enology: "José Manuel Sousa Soares",
+        grapes: "Touriga Nacional",
+        profile: "tinto_fuerte",
+        tasting: "Aroma floral típico (violetas), fruta vermelha expressiva e especiarias. Muito fresco, taninos vincados e maduros, final sedoso.",
+        pairing: "Carnes grelhadas ou pratos tradicionais de forno.",
+        temp: "16° - 18°C",
+        alcohol: "14.0%",
+        why: "La casta reina de Portugal despliega notas de violeta y taninos nobles para resaltar el sabor de asados en horno de piedra."
+    },
+    {
+        id: "w20",
+        name: "QUINTA DE VENTOZELO RABIGATO 2024",
+        type: "branco",
+        year: "2024",
+        doc: "DOC Douro",
+        enology: "José Manuel Sousa Soares",
+        grapes: "Rabigato",
+        profile: "blanco_fresco",
+        tasting: "Amarelo ténue, aromas cítricos e flor de laranjeira. Acidez notável e estrutura firme, final longo, mineral e equilibrado.",
+        pairing: "Pratos leves de carne branca, peixe grelhado, marisco e cozinha asiática.",
+        temp: "10° - 12°C",
+        alcohol: "11.5%",
+        why: "Su marcada acidez y rasgo mineral la convierten en la opción perfecta para equilibrar el picante o la riqueza de la cocina asiática."
+    },
+    {
+        id: "w21",
+        name: "QUINTA DE VENTOZELO VIOSINHO 2024",
+        type: "branco",
+        year: "2024",
+        doc: "DOC Douro",
+        enology: "José Manuel Sousa Soares",
+        grapes: "Viosinho",
+        profile: "blanco_fresco",
+        tasting: "Cor citrina e cristalina. Notas cítricas e flor de laranjeira. Surpreendentemente fresco, equilibrado, envolvente com final redondo.",
+        pairing: "Aperitivo perfeito, marisco, peixes no forno ou pratos leves de carne.",
+        temp: "10° - 12°C",
+        alcohol: "13.0%",
+        why: "Excelente volumen en boca combinado con aroma floral, perfecto para pescados al horno en su propio jugo."
+    }
+];
+
+// =========================================================================
+// 4. VARIABLES DE ESTADO Y MOTOR PRINCIPAL
+// =========================================================================
+let currentLang = 'es';
+let currentQuestion = 0;
+let userAnswers = [];
+let activeQuestions = [];
+
+// Generador aleatorio (Selecciona 5 preguntas únicas usando Fisher-Yates Shuffle)
+function generateRandomQuestions(lang) {
+    const pool = questionPools[lang] || questionPools['es'];
+    const shuffled = [...pool];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled.slice(0, 5).map((q, idx) => ({
+        ...q,
+        text: `${idx + 1}. ${q.text}`
+    }));
+}
+
+// Inicialización al cargar la página
+window.onload = function() {
+    activeQuestions = generateRandomQuestions(currentLang);
+    renderQuestion();
+    renderMenu('all');
+};
+
+// Cambio dinámico de idioma
+function changeLanguage(lang) {
+    currentLang = lang;
+    const t = i18n[lang];
+
+    document.getElementById('heroSubtitle').innerText = t.heroSubtitle;
+    document.getElementById('navSommelier').innerText = t.navSommelier;
+    document.getElementById('navMenu').innerText = t.navMenu;
+    document.getElementById('navHistory').innerText = t.navHistory;
+
+    document.getElementById('quizBadge').innerText = t.quizBadge;
+    document.getElementById('quizTitle').innerText = t.quizTitle;
+    document.getElementById('stepText').innerText = t.stepText;
+    document.getElementById('txtPrev').innerText = t.txtPrev;
+    document.getElementById('txtTip').innerText = t.txtTip;
+
+    document.getElementById('resSubtitle').innerText = t.resSubtitle;
+    document.getElementById('resTitle').innerText = t.resTitle;
+    document.getElementById('lblProfile').innerText = t.lblProfile;
+    document.getElementById('lblPairing').innerText = t.lblPairing;
+    document.getElementById('btnRestart').innerText = t.btnRestart;
+
+    document.getElementById('menuTitle').innerText = t.menuTitle;
+    document.getElementById('menuDesc').innerText = t.menuDesc;
+    document.getElementById('filterAll').innerText = t.filterAll;
+    document.getElementById('filterTinto').innerText = t.filterTinto;
+    document.getElementById('filterBranco').innerText = t.filterBranco;
+    document.getElementById('filterEspecial').innerText = t.filterEspecial;
+
+    document.getElementById('histHeader').innerText = t.histHeader;
+    document.getElementById('histQuote').innerText = t.histQuote;
+    document.getElementById('histP1').innerText = t.histP1;
+    document.getElementById('histSub1').innerText = t.histSub1;
+    document.getElementById('histP2').innerText = t.histP2;
+    document.getElementById('histSub2').innerText = t.histSub2;
+    document.getElementById('histP3').innerText = t.histP3;
+    document.getElementById('histP4').innerText = t.histP4;
+
+    activeQuestions = generateRandomQuestions(currentLang);
+    currentQuestion = 0;
+    userAnswers = [];
+    renderQuestion();
+}
+
+// Control de navegación entre pestañas
+function switchTab(tab) {
+    document.getElementById('sec-quiz').classList.add('hidden');
+    document.getElementById('sec-menu').classList.add('hidden');
+    document.getElementById('sec-history').classList.add('hidden');
+
+    const defaultBtnClass = "px-4 py-2.5 sm:px-6 sm:py-3 rounded-full text-xs sm:text-sm font-semibold transition-all-custom bg-white/10 backdrop-blur-md text-white hover:bg-white/20 border border-white/20";
+    const activeBtnClass = "px-4 py-2.5 sm:px-6 sm:py-3 rounded-full text-xs sm:text-sm font-semibold transition-all-custom bg-olive-600 text-white shadow-lg shadow-olive-900/40 border border-olive-600";
+
+    document.getElementById('tab-quiz').className = defaultBtnClass;
+    document.getElementById('tab-menu').className = defaultBtnClass;
+    document.getElementById('tab-history').className = defaultBtnClass;
+
+    if (tab === 'quiz') {
+        document.getElementById('sec-quiz').classList.remove('hidden');
+        document.getElementById('tab-quiz').className = activeBtnClass;
+    } else if (tab === 'menu') {
+        document.getElementById('sec-menu').classList.remove('hidden');
+        document.getElementById('tab-menu').className = activeBtnClass;
+    } else if (tab === 'history') {
+        document.getElementById('sec-history').classList.remove('hidden');
+        document.getElementById('tab-history').className = activeBtnClass;
+    }
+}
+
+// Renderizado de preguntas del Quiz
+function renderQuestion() {
+    if (!activeQuestions || activeQuestions.length === 0) return;
+    const qData = activeQuestions[currentQuestion];
+    document.getElementById('stepNum').innerText = `${currentQuestion + 1} / 5`;
+    document.getElementById('progressBar').style.width = `${((currentQuestion + 1) / 5) * 100}%`;
+    document.getElementById('questionText').innerText = qData.text;
+
+    const optsContainer = document.getElementById('optionsContainer');
+    optsContainer.innerHTML = '';
+
+    qData.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = "w-full text-left p-4 rounded-xl border border-stone-200 hover:border-olive-600 hover:bg-olive-50/50 transition-all flex items-center justify-between group";
+        btn.onclick = () => selectOption(opt.profile);
+        btn.innerHTML = `
+            <span class="text-stone-800 font-medium text-sm sm:text-base group-hover:text-olive-800">${opt.text}</span>
+            <span class="w-6 h-6 rounded-full border border-stone-300 flex items-center justify-center group-hover:border-olive-600 group-hover:bg-olive-600 group-hover:text-white text-xs font-bold transition">
+                ${String.fromCharCode(65 + idx)}
+            </span>
+        `;
+        optsContainer.appendChild(btn);
+    });
+
+    if (currentQuestion > 0) {
+        document.getElementById('btnPrev').classList.remove('hidden');
+    } else {
+        document.getElementById('btnPrev').classList.add('hidden');
+    }
+}
+
+// Selección de opción y avance
+function selectOption(profile) {
+    userAnswers[currentQuestion] = profile;
+    if (currentQuestion < 4) {
+        currentQuestion++;
+        renderQuestion();
+    } else {
+        calculateResult();
+    }
+}
+
+// Retroceder pregunta
+function prevQuestion() {
+    if (currentQuestion > 0) {
+        currentQuestion--;
+        renderQuestion();
+    }
+}
+
+// Cálculo del vino recomendado y maridaje
+function calculateResult() {
+    const counts = {};
+    userAnswers.forEach(p => counts[p] = (counts[p] || 0) + 1);
+    
+    let dominantProfile = 'tinto_suave';
+    let maxCount = 0;
+    for (const p in counts) {
+        if (counts[p] > maxCount) {
+            maxCount = counts[p];
+            dominantProfile = p;
+        }
+    }
+
+    const matchedWines = wineCatalog.filter(w => w.profile === dominantProfile);
+    const wine = matchedWines.length > 0 ? matchedWines[Math.floor(Math.random() * matchedWines.length)] : wineCatalog[0];
+
+    document.getElementById('quiz-container').classList.add('hidden');
+    document.getElementById('resultBox').classList.remove('hidden');
+
+    document.getElementById('resWineName').innerText = wine.name;
+    document.getElementById('resWineDetails').innerText = `${wine.doc} | ${wine.grapes}`;
+    document.getElementById('badgeWineType').innerText = wine.type.toUpperCase();
+    document.getElementById('resWineProfile').innerText = wine.tasting;
+    document.getElementById('resPairingFood').innerText = wine.pairing;
+    document.getElementById('resPairingWhy').innerText = wine.why;
+}
+
+// Reinicio del test con preguntas nuevas
+function resetQuiz() {
+    currentQuestion = 0;
+    userAnswers = [];
+    activeQuestions = generateRandomQuestions(currentLang);
+    document.getElementById('resultBox').classList.add('hidden');
+    document.getElementById('quiz-container').classList.remove('hidden');
+    renderQuestion();
+}
+
+// Renderizado del menú digital
+function renderMenu(filter) {
+    const grid = document.getElementById('wineGrid');
+    grid.innerHTML = '';
+
+    const filtered = filter === 'all' 
+        ? wineCatalog 
+        : wineCatalog.filter(w => w.type === filter);
+
+    filtered.forEach(wine => {
+        const card = document.createElement('div');
+        card.className = "bg-white rounded-xl border border-stone-200 p-6 flex flex-col justify-between hover:shadow-lg transition-all border-t-4 border-t-olive-600";
+        
+        let badgeColor = "bg-winered-600";
+        if(wine.type === 'branco') badgeColor = "bg-mustard-500 text-charcoal";
+        if(wine.type === 'especial') badgeColor = "bg-olive-700";
+
+        card.innerHTML = `
+            <div>
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full text-white ${badgeColor}">
+                        ${wine.doc}
+                    </span>
+                    <span class="text-xs font-semibold text-stone-600">${wine.year}</span>
+                </div>
+                <h3 class="serif text-xl font-bold text-charcoal mb-2 leading-snug">${wine.name}</h3>
+                <p class="text-xs text-olive-700 font-medium mb-3">🍇 ${wine.grapes}</p>
+                <p class="text-stone-600 text-xs leading-relaxed mb-4 line-clamp-4">${wine.tasting}</p>
+            </div>
+
+            <div class="pt-4 border-t border-stone-100 space-y-2 text-[11px] text-stone-600">
+                <div class="flex justify-between">
+                    <span class="font-semibold text-stone-800">Servir:</span>
+                    <span>${wine.temp}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="font-semibold text-stone-800">Álcool:</span>
+                    <span>${wine.alcohol}</span>
+                </div>
+                <div class="mt-2 pt-2 border-t border-dashed border-stone-200">
+                    <span class="font-bold text-winered-600 block mb-0.5">Harmonização:</span>
+                    <span class="italic text-stone-600">${wine.pairing}</span>
+                </div>
+            </div>
+        `;
+        grid.appendChild(card);
+    });
+}
+
+// Filtro por categoría de vino
+function filterWines(type) {
+    ['all', 'tinto', 'branco', 'especial'].forEach(t => {
+        const btn = document.getElementById(`filter${t.charAt(0).toUpperCase() + t.slice(1)}`);
+        if (t === type) {
+            btn.className = "px-3 py-1.5 rounded-full text-xs font-semibold bg-olive-600 text-white";
+        } else {
+            btn.className = "px-3 py-1.5 rounded-full text-xs font-semibold bg-stone-100 text-stone-700 hover:bg-stone-200";
+        }
+    });
+    renderMenu(type);
+}
+
+/* =========================================================================
+​1. CONFIGURACIÓN DE COLORES Y TIPOGRAFÍA (TAILWIND CSS)
+Para usar en tu HTML dentro de <script> junto al CDN de Tailwind
+========================================================================= /
+/
+tailwind.config = {
+theme: {
+extend: {
+colors: {
+olive: {
+50: '#f6f7f2',
+100: '#e8ebd9',
+600: '#556b2f',
+700: '#465827',
+800: '#384620',
+900: '#2b361a',
+},
+winered: {
+500: '#800020',
+600: '#6b001b',
+700: '#540015',
+},
+mustard: {
+400: '#e1ad01',
+500: '#d4af37',
+},
+charcoal: '#1a1a1a',
+},
+fontFamily: {
+serif: ['Playfair Display', 'Georgia', 'serif'],
+sans: ['Inter', 'sans-serif'],
+}
+}
+}
+}
+*/
+​/* =========================================================================
+2. ESTILOS CSS PERSONA…
+
